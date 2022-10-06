@@ -13,15 +13,13 @@ import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import org.springframework.web.util.UriComponentsBuilder
 
 @Component
-class DogApiImpl(@Value("\${dog.api.images.url}") private val imageUrl: String,
-                 @Value("\${dog.api.breeds.url}") private val breedsUrl: String): DogApi {
+class DogApiImpl(
+    @Value("\${dog.api.images.url}") private val imageUrl: String,
+    @Value("\${dog.api.breeds.url}") private val breedsUrl: String,
+    private val webClient: WebClient
+) : DogApi {
 
     private val BREED_TYPE_PATH_PARAM = "BREED_TYPE"
-
-    private val webClient: WebClient = WebClient.builder()
-        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-        .build()
 
     override suspend fun getImage(breed: String): ImageResponse? {
         var uriComponents = UriComponentsBuilder.fromUriString(imageUrl).build()

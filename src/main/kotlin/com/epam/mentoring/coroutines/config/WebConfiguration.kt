@@ -1,17 +1,19 @@
 package com.epam.mentoring.coroutines.config
 
-import com.epam.mentoring.coroutines.handler.BreedHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.reactive.function.server.coRouter
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 class WebConfiguration {
 
+    /* It is better to create WebClient as a separate bean instead of creating it in the implementation */
     @Bean
-    fun routes(breedHandler: BreedHandler) =
-        coRouter {
-            GET("/api/v1/breeds", breedHandler::getBreeds)
-            GET("/api/v1/breeds/{breed_type}/image", breedHandler::getBreedImage)
-        }
+    fun defaultWebClient() =
+        WebClient.builder()
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            .build()
 }

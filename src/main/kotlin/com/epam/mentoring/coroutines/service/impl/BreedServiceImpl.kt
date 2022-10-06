@@ -26,7 +26,7 @@ class BreedServiceImpl(private val breedRepository: BreedRepository,
     }
 
     override suspend fun getImage(breed: String): String {
-        val breedEntity = breedRepository.findBreedByName(breed) ?: throw NotFoundException()
+        val breedEntity = breedRepository.findByBreedName(breed) ?: throw NotFoundException()
         if (breedEntity.imageUrl.isNullOrEmpty()) {
             val imageUrl = dogApi.getImage(breed)?.message?.get(0)
             breedEntity.imageUrl = imageUrl
